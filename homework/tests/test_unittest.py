@@ -39,7 +39,8 @@ class TestSuite(unittest.TestCase):
             ).hexdigest()
         else:
             msg = (
-                request.get("account", "") + request.get("login", "") + api.SALT
+                request.get("account", "") +
+                request.get("login", "") + api.SALT
             ).encode("utf-8")
             request["token"] = hashlib.sha512(msg).hexdigest()
 
@@ -47,16 +48,19 @@ class TestSuite(unittest.TestCase):
         [
             {"first_name": 123, "last_name": "Doe"},  # имя не строкой
             {"first_name": "John", "last_name": []},  # фамилия не строкой
-            {"phone": None, "email": "email@example.com"},  # отстствует номер телефона
+            # отстствует номер телефона
+            {"phone": None, "email": "email@example.com"},
             {
                 "phone": "notaphonenumber",
                 "email": "email@example.com",
             },  # некорректный номер телефона
             {"phone": "71234567890", "email": "invalidemail"},  # кривой email
             {"birthday": "31-12-1999", "gender": 1},  # неправильный формат даты
-            {"birthday": "01.01.1800", "gender": 1},  # дата рождения очень древняя
+            # дата рождения очень древняя
+            {"birthday": "01.01.1800", "gender": 1},
             {"gender": 3, "birthday": "01.01.1990"},  # неопределённый пол :)
-            {"gender": "male", "birthday": "01.01.1990"},  # пол не в числовом формате
+            # пол не в числовом формате
+            {"gender": "male", "birthday": "01.01.1990"},
             {
                 "email": "example.com",
                 "first_name": "Test",
@@ -96,7 +100,8 @@ class TestSuite(unittest.TestCase):
                 "client_ids": [1, "2", 3],
                 "date": "01.01.2020",
             },  # client_ids сожержит строку
-            {"client_ids": [1, 2, 3], "date": "2020-01-01"},  # дата в кривом формате
+            # дата в кривом формате
+            {"client_ids": [1, 2, 3], "date": "2020-01-01"},
             {"client_ids": [], "date": "01.01.2020"},  # client_ids пустой
         ]
     )

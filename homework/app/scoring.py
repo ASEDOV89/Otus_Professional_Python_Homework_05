@@ -5,13 +5,13 @@ from typing import Optional
 
 
 def get_score(
-        store,
-        phone: Optional[str] = None,
-        email: Optional[str] = None,
-        birthday: Optional[datetime] = None,
-        gender: Optional[int] = None,
-        first_name: Optional[str] = None,
-        last_name: Optional[str] = None
+    store,
+    phone: Optional[str] = None,
+    email: Optional[str] = None,
+    birthday: Optional[datetime] = None,
+    gender: Optional[int] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
 ) -> float:
     key_parts = [
         first_name or "",
@@ -19,7 +19,7 @@ def get_score(
         phone or "",
         birthday.strftime("%Y%m%d") if birthday else "",
     ]
-    key = "uid:" + hashlib.md5("".join(key_parts).encode('utf-8')).hexdigest()
+    key = "uid:" + hashlib.md5("".join(key_parts).encode("utf-8")).hexdigest()
 
     try:
         score = store.cache_get(key)
