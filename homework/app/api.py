@@ -146,8 +146,7 @@ class ClientIDsField(Field):
             for item in value:
                 if not isinstance(item, int):
                     raise ValueError(
-                        f"Each item in '{
-                            self.name}' must be an integer")
+                        f"Each item in '{self.name}' must be an integer")
 
 
 class BaseRequest:
