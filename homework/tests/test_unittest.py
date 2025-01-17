@@ -27,20 +27,24 @@ class TestSuite(unittest.TestCase):
 
     def get_response(self, request):
         return api.method_handler(
-            {"body": request, "headers": self.headers}, self.context, self.settings
+            {"body": request, "headers": self.headers},
+            self.context,
+            self.settings,
         )
 
     def set_valid_auth(self, request):
         if request.get("login") == api.ADMIN_LOGIN:
             request["token"] = hashlib.sha512(
-                (datetime.datetime.now().strftime("%Y%m%d%H") + api.ADMIN_SALT).encode(
-                    "utf-8"
-                )
+                (
+                    datetime.datetime.now().strftime("%Y%m%d%H")
+                    + api.ADMIN_SALT
+                ).encode("utf-8")
             ).hexdigest()
         else:
             msg = (
-                request.get("account", "") +
-                request.get("login", "") + api.SALT
+                request.get("account", "")
+                + request.get("login", "")
+                + api.SALT
             ).encode("utf-8")
             request["token"] = hashlib.sha512(msg).hexdigest()
 
@@ -55,7 +59,10 @@ class TestSuite(unittest.TestCase):
                 "email": "email@example.com",
             },  # некорректный номер телефона
             {"phone": "71234567890", "email": "invalidemail"},  # кривой email
-            {"birthday": "31-12-1999", "gender": 1},  # неправильный формат даты
+            {
+                "birthday": "31-12-1999",
+                "gender": 1,
+            },  # неправильный формат даты
             # дата рождения очень древняя
             {"birthday": "01.01.1800", "gender": 1},
             {"gender": 3, "birthday": "01.01.1990"},  # неопределённый пол :)

@@ -109,7 +109,8 @@ class DateField(Field):
                 datetime.datetime.strptime(value, "%d.%m.%Y")
             except ValueError:
                 raise ValueError(
-                    f"'{self.name}' must be in format 'DD.MM.YYYY'")
+                    f"'{self.name}' must be in format 'DD.MM.YYYY'"
+                )
 
 
 class BirthDayField(DateField):
@@ -146,7 +147,8 @@ class ClientIDsField(Field):
             for item in value:
                 if not isinstance(item, int):
                     raise ValueError(
-                        f"Each item in '{self.name}' must be an integer")
+                        f"Each item in '{self.name}' must be an integer"
+                    )
 
 
 class BaseRequest:
@@ -162,7 +164,9 @@ class BaseRequest:
     @classmethod
     def fields(cls):
         return {
-            name: attr for name, attr in cls.__dict__.items() if isinstance(attr, Field)
+            name: attr
+            for name, attr in cls.__dict__.items()
+            if isinstance(attr, Field)
         }
 
     def is_valid(self):
@@ -180,8 +184,9 @@ class MethodRequest(BaseRequest):
     account = CharField(required=False, nullable=True)
     login = CharField(required=True, nullable=True)
     token = CharField(required=True, nullable=True)
-    arguments = ArgumentsField(required=True,
-                               nullable=True)  # Changed to nullable=True
+    arguments = ArgumentsField(
+        required=True, nullable=True
+    )  # Changed to nullable=True
     # Changed to nullable=True
     method = CharField(required=True, nullable=True)
 
@@ -224,8 +229,9 @@ class ClientsInterestsRequest(BaseRequest):
 def check_auth(request):
     if request.is_admin:
         digest = hashlib.sha512(
-            (datetime.datetime.now().strftime(
-                "%Y%m%d%H") + ADMIN_SALT).encode("utf-8")
+            (datetime.datetime.now().strftime("%Y%m%d%H") + ADMIN_SALT).encode(
+                "utf-8"
+            )
         ).hexdigest()
     else:
         digest = hashlib.sha512(
@@ -307,7 +313,9 @@ class MainHTTPHandler(BaseHTTPRequestHandler):
             if path in self.router:
                 handler = self.router[path]
                 response, code = handler(
-                    {"body": request_body, "headers": self.headers}, context, self.store
+                    {"body": request_body, "headers": self.headers},
+                    context,
+                    self.store,
                 )
             else:
                 code = NOT_FOUND
@@ -325,7 +333,9 @@ class MainHTTPHandler(BaseHTTPRequestHandler):
         else:
             response_body = {
                 "code": code,
-                "error": response.get("error", ERRORS.get(code, "Unknown Error")),
+                "error": response.get(
+                    "error", ERRORS.get(code, "Unknown Error")
+                ),
             }
         logging.info(f"Response: {response_body}")
         self.wfile.write(json.dumps(response_body).encode("utf-8"))

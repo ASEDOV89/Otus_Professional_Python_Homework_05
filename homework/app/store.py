@@ -5,8 +5,9 @@ from typing import Optional
 
 
 class RedisStore:
-    def __init__(self, host=None, port=None, db=0,
-                 retries=3, retry_timeout=0.5):
+    def __init__(
+        self, host=None, port=None, db=0, retries=3, retry_timeout=0.5
+    ):
         self.host = host or os.getenv("REDIS_HOST", "localhost")
         self.port = port or int(os.getenv("REDIS_PORT", "6379"))
         self.db = db

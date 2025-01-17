@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build_and_test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     services:
@@ -16,19 +16,32 @@ jobs:
         ports:
           - 6379:6379
         options: >-
-          --health-cmd="redis-cli ping"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build -t scoring_app .
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-    - name: Run tests
-      env:
-        REDIS_HOST: localhost
-        REDIS_PORT: 6379
-      run: docker run --network host scoring_app pytest homework/tests/
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install requests
+
+      - name: Run Unit Tests
+        run: |
+          export REDIS_HOST=localhost
+          export REDIS_PORT=6379
+          pytest homework/tests/test_pytest_unit.py
+
+      - name: Run Integration Tests
+        run: |
+          export REDIS_HOST=localhost
+          export REDIS_PORT=6379
+          pytest homework/tests/test_integration.py
