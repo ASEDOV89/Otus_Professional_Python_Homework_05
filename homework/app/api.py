@@ -117,9 +117,7 @@ class DateField(Field):
                 date_obj = datetime.datetime.strptime(value, "%d.%m.%Y")
                 instance.__dict__[self.name] = date_obj
             except ValueError:
-                raise ValueError(
-                    f"'{self.name}' must be in format 'DD.MM.YYYY'"
-                )
+                raise ValueError(f"'{self.name}' must be in format 'DD.MM.YYYY'")
 
 
 class BirthDayField(DateField):

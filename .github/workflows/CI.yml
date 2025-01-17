@@ -36,18 +36,18 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          export REDIS_HOST=redis
+          export REDIS_HOST=localhost
           export REDIS_PORT=6379
           pytest tests/unit/
 
       - name: Run Integration Tests
         run: |
-          export REDIS_HOST=redis
+          export REDIS_HOST=localhost
           export REDIS_PORT=6379
           pytest tests/integration/
 
       - name: Run Others Tests
         run: |
-          export REDIS_HOST=redis
+          export REDIS_HOST=localhost
           export REDIS_PORT=6379
           pytest tests/other/
