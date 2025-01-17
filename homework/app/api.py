@@ -352,7 +352,7 @@ if __name__ == "__main__":
         format="[%(asctime)s] %(levelname).1s %(message)s",
         datefmt="%Y.%m.%d %H:%M:%S",
     )
-    server = HTTPServer(("localhost", args.port), MainHTTPHandler)
+    server = HTTPServer(("0.0.0.0", args.port), MainHTTPHandler)  # Изменено на "0.0.0.0"
     logging.info(f"Starting server at {args.port}")
     try:
         server.serve_forever()
