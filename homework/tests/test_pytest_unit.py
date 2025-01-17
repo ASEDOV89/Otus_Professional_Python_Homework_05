@@ -66,5 +66,5 @@ def test_get_interests_success(mock_store):
 
 def test_get_interests_store_unavailable(mock_store):
     mock_store.get.side_effect = Exception("Store unavailable")
-    with pytest.raises(Exception):
-        get_interests(mock_store, "1")
+    interests = get_interests(mock_store, "1")
+    assert interests == []

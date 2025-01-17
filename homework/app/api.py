@@ -6,6 +6,7 @@ import datetime
 import logging
 import hashlib
 import uuid
+import sys
 from argparse import ArgumentParser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from homework.app.scoring import get_score, get_interests
@@ -103,22 +104,31 @@ class PhoneField(Field):
 
 
 class DateField(Field):
-    def validate(self, value):
-        super().validate(value)
-        if value:
+    def __set__(self, instance, value):
+        if value is None:
+            if self.required:
+                raise ValueError(f"'{self.name}' is required")
+            else:
+                instance.__dict__[self.name] = None
+        else:
+            if not self.nullable and not value:
+                raise ValueError(f"'{self.name}' cannot be empty")
             try:
-                datetime.datetime.strptime(value, "%d.%m.%Y")
+                date_obj = datetime.datetime.strptime(value, "%d.%m.%Y")
+                instance.__dict__[self.name] = date_obj
             except ValueError:
-                raise ValueError(f"'{self.name}' must be in format 'DD.MM.YYYY'")
+                raise ValueError(
+                    f"'{self.name}' must be in format 'DD.MM.YYYY'"
+                )
 
 
 class BirthDayField(DateField):
-    def validate(self, value):
-        super().validate(value)
-        if value:
-            birthday = datetime.datetime.strptime(value, "%d.%m.%Y")
+    def __set__(self, instance, value):
+        super().__set__(instance, value)
+        date_obj = instance.__dict__[self.name]
+        if date_obj:
             today = datetime.datetime.today()
-            age = (today - birthday).days // 365
+            age = (today - date_obj).days // 365
             if age > 70:
                 raise ValueError(
                     f"'{self.name}' must be less than or equal to 70 years old"
@@ -338,8 +348,8 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--log", action="store", default=None)
     args = parser.parse_args()
     logging.basicConfig(
-        filename=args.log,
-        level=logging.INFO,
+        stream=sys.stderr,
+        level=logging.DEBUG,
         format="[%(asctime)s] %(levelname).1s %(message)s",
         datefmt="%Y.%m.%d %H:%M:%S",
     )

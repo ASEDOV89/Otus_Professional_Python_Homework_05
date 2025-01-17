@@ -42,6 +42,6 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          export REDIS_HOST=localhost
+          export REDIS_HOST=redis
           export REDIS_PORT=6379
           pytest homework/tests/test_integration.py

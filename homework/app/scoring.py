@@ -2,6 +2,7 @@ import hashlib
 import json
 from datetime import datetime
 from typing import Optional
+import logging
 
 
 def get_score(
@@ -47,5 +48,9 @@ def get_score(
 
 
 def get_interests(store, cid: str) -> list:
-    r = store.get(f"i:{cid}")
-    return json.loads(r) if r else []
+    try:
+        r = store.get(f"i:{cid}")
+        return json.loads(r) if r else []
+    except Exception as e:
+        logging.exception(f"Error getting interests for cid {cid}")
+        return []
