@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir requests
 
 COPY . /app/
 
-CMD ["pytest", "homework/tests/"]
+CMD ["pytest", "tests/"]
