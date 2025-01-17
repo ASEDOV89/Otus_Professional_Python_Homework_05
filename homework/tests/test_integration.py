@@ -1,5 +1,3 @@
-# tests/test_integration.py
-
 import unittest
 import subprocess
 import time
